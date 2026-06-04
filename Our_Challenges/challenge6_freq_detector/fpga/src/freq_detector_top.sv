@@ -99,11 +99,16 @@ bin_to_bcd4 #(.BIN_W(11)) u_bcd_freq (
     .ones     (f_o)
 );
 
-// ── BCD conversion — crossing count (0–128, 3 digits) ───────────────────
+// ── BCD conversion — crossing count scaled ×2 (0–254, 3 digits) ─────────
+// cross_reg max is 127 (2000 Hz), so ×2 = 254 — fits in 8 bits, no overflow.
+// Scaling maps the practical 6–127 range → 12–254 for better display use.
+logic [7:0] cross_scaled;
+assign cross_scaled = {cross_reg[6:0], 1'b0}; // cross_reg * 2
+
 logic [3:0] c_h, c_t, c_o;
 
 bin_to_bcd #(.BIN_W(8)) u_bcd_cross (
-    .bin     (cross_reg),
+    .bin     (cross_scaled),
     .hundreds(c_h),
     .tens    (c_t),
     .ones    (c_o)
