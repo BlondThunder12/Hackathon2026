@@ -1,0 +1,5 @@
+QUARTUS_VERSION = "17.1"
+DATE = "00:00:00  June 4, 2026"
+
+# Revisions
+PROJECT_REVISION = "freq_detector"
