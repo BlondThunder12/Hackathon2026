@@ -31,8 +31,8 @@ set_location_assignment PIN_A7 -to KEY[1]
 set_instance_assignment -name IO_STANDARD "3.3 V SCHMITT TRIGGER" -to KEY[*]
 
 # ---- LEDs ----
-set_location_assignment PIN_A8  -to LEDR[0]
-set_location_assignment PIN_A9  -to LEDR[1]
+set_location_assignment PIN_A8 -to LEDR[0]
+set_location_assignment PIN_A9 -to LEDR[1]
 set_location_assignment PIN_A10 -to LEDR[2]
 set_location_assignment PIN_B10 -to LEDR[3]
 set_location_assignment PIN_D13 -to LEDR[4]
@@ -63,10 +63,7 @@ set_location_assignment PIN_A18 -to HEX1[5]
 set_location_assignment PIN_B17 -to HEX1[6]
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HEX1[*]
 
-# ---- HEX2 (units digit + decimal point intent) ----
-# NOTE: The DE10-Lite does not route the DP pin of HEX2 to the FPGA.
-# seg7_dec drives DP internally (bit 7 = 0 = ON) but only [6:0] is wired.
-# To physically light the DP, bridge HEX2 DP to a spare GPIO and assign it.
+# ---- HEX2 (units digit + decimal point on bit 7 = PIN_A19) ----
 set_location_assignment PIN_B20 -to HEX2[0]
 set_location_assignment PIN_A20 -to HEX2[1]
 set_location_assignment PIN_B19 -to HEX2[2]
@@ -74,6 +71,7 @@ set_location_assignment PIN_A21 -to HEX2[3]
 set_location_assignment PIN_B21 -to HEX2[4]
 set_location_assignment PIN_C22 -to HEX2[5]
 set_location_assignment PIN_B22 -to HEX2[6]
+set_location_assignment PIN_A19 -to HEX2[7]
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HEX2[*]
 
 # ---- HEX3 (blanked) ----
@@ -107,9 +105,9 @@ set_location_assignment PIN_N20 -to HEX5[6]
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HEX5[*]
 
 # ---- UART RX from ESP32 ----
-# Connect: ESP32 GPIO17 (UART2 TX) -> FPGA ARDUINO_IO[0] (PIN_V10)
+# Connect: ESP32 GPIO17 (UART2 TX) -> FPGA ARDUINO_IO[1] (PIN_AB6)
 # GND: Arduino header GND -> ESP32 GND
-set_location_assignment PIN_V10 -to UART_RXD
+set_location_assignment PIN_AB6 -to UART_RXD
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to UART_RXD
 
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top

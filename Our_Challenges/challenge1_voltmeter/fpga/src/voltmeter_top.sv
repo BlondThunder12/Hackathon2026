@@ -16,7 +16,7 @@ module voltmeter_top (
     input  logic        UART_RXD,      // from ESP32 GPIO17
     output logic [6:0]  HEX0,          // hundredths digit
     output logic [6:0]  HEX1,          // tenths digit
-    output logic [6:0]  HEX2,          // units digit (dp intent in bit 7)
+    output logic [7:0]  HEX2,          // units digit; [7] = decimal point
     output logic [6:0]  HEX3,          // unused — blank
     output logic [6:0]  HEX4,          // unused — blank
     output logic [6:0]  HEX5,          // unused — blank
@@ -71,16 +71,16 @@ bin_to_bcd #(.BIN_W(9)) u_bcd (
 );
 
 // ── 7-segment decoders ───────────────────────────────────────
-// HEX2 gets dp_on=1 so bit 7 of seg_h is driven low (active-low ON).
-// The DE10-Lite does not wire the DP pin to the FPGA in standard config,
-// so only [6:0] reaches the physical display. See QSF comment for details.
-seg7_dec u_hex2 (.digit(bcd_h), .dp_on(1'b1), .segments(seg_h));
+seg7_dec u_hex2 (.digit(bcd_h), .dp_on(1'b1), .segments(seg_h)); // DP always ON
 seg7_dec u_hex1 (.digit(bcd_t), .dp_on(1'b0), .segments(seg_t));
 seg7_dec u_hex0 (.digit(bcd_o), .dp_on(1'b0), .segments(seg_o));
 
-assign HEX2 = seg_h[6:0];
+assign HEX2 = seg_h;        // full 8 bits — [7]=DP (0=ON, active-low) → PIN_B15
 assign HEX1 = seg_t[6:0];
 assign HEX0 = seg_o[6:0];
+
+// ── HEX2 Decimal Point (active-low: 0 = ON always) ──────────
+// HEX2_DP removed — DP is now driven through HEX2[7] on PIN_B15
 
 // Blank unused displays (all segments off = all pins high)
 assign HEX3 = 7'h7F;
